@@ -142,7 +142,7 @@ export default {
   name: "HomePage",
   data() {
     return {
-      dialog: false, // Dialog açma/kapama kontrolü
+      dialog: false, // Dialog açma/kapama kontrolü.
       sortBy: "Status",
       products: [
         {
