@@ -57,7 +57,9 @@
               <v-chip v-if="product.status === 'In Progress'" color="blue">
                 In Progress
               </v-chip>
-              <v-chip v-for="tag in product.tags" :key="tag" class="ml-2">{{ tag }}</v-chip>
+              <v-chip v-for="tag in product.tags" :key="tag" class="ml-2">{{
+                tag
+              }}</v-chip>
             </div>
           </v-card-text>
         </v-card>
@@ -118,16 +120,28 @@
                 <label>Select Tags</label>
               </v-col>
               <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.frontend" label="Frontend"></v-checkbox>
+                <v-checkbox
+                  v-model="newProduct.tags.frontend"
+                  label="Frontend"
+                ></v-checkbox>
               </v-col>
               <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.ux" label="UX"></v-checkbox>
+                <v-checkbox
+                  v-model="newProduct.tags.ux"
+                  label="UX"
+                ></v-checkbox>
               </v-col>
               <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.ui" label="UI"></v-checkbox>
+                <v-checkbox
+                  v-model="newProduct.tags.ui"
+                  label="UI"
+                ></v-checkbox>
               </v-col>
               <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.bug" label="Bug"></v-checkbox>
+                <v-checkbox
+                  v-model="newProduct.tags.bug"
+                  label="Bug"
+                ></v-checkbox>
               </v-col>
             </v-row>
           </v-card-text>
@@ -137,7 +151,9 @@
             <v-spacer></v-spacer>
             <v-btn text @click="dialog = false">Cancel</v-btn>
             <!-- Save butonu, form geçerli değilse devre dışı bırakılır -->
-            <v-btn color="primary" @click="submitForm" :disabled="!isFormValid">Save</v-btn>
+            <v-btn color="primary" @click="submitForm" :disabled="!isFormValid"
+              >Save</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-form>
@@ -157,7 +173,8 @@ export default {
         // Örnek ürün listesi
         {
           name: "[Product Name]",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+          description:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
           status: "Completed",
           tags: ["Frontend", "UX", "Bug"],
         },
@@ -176,13 +193,15 @@ export default {
       ],
       newProduct: {
         // Yeni ürün eklemek için form verileri
-        name: "", description: "", status: "",
+        name: "",
+        description: "",
+        status: "",
         tags: { frontend: false, ux: false, ui: false, bug: false },
       },
       rules: {
         // Form doğrulama kuralları
-        required: value => !!value || 'This field is required.',
-        minLength: v => v.length >= 5 || 'Minimum 5 characters required.'
+        required: (value) => !!value || "This field is required.",
+        minLength: (v) => v.length >= 5 || "Minimum 5 characters required.",
       },
     };
   },
@@ -192,9 +211,12 @@ export default {
       if (!this.sortBy) return this.products;
 
       return [...this.products].sort((a) => {
-        if (this.sortBy === "In Progress") return a.status === "In Progress" ? -1 : 1;
-        else if (this.sortBy === "Completed") return a.status === "Completed" ? -1 : 1;
-        else if (this.sortBy === "Pending") return a.status === "Pending" ? -1 : 1;
+        if (this.sortBy === "In Progress")
+          return a.status === "In Progress" ? -1 : 1;
+        else if (this.sortBy === "Completed")
+          return a.status === "Completed" ? -1 : 1;
+        else if (this.sortBy === "Pending")
+          return a.status === "Pending" ? -1 : 1;
         return 0;
       });
     },
@@ -212,7 +234,9 @@ export default {
     submitForm() {
       // Form doğrulamayı kontrol eder; geçerliyse ürünü ekler
       if (this.$refs.form.validate()) {
-        const selectedTags = Object.keys(this.newProduct.tags).filter(tag => this.newProduct.tags[tag]);
+        const selectedTags = Object.keys(this.newProduct.tags).filter(
+          (tag) => this.newProduct.tags[tag]
+        );
         this.products.push({
           name: this.newProduct.name,
           description: this.newProduct.description,
@@ -226,7 +250,9 @@ export default {
     resetForm() {
       // Formu sıfırlar ve doğrulamaları temizler
       this.newProduct = {
-        name: "", description: "", status: "",
+        name: "",
+        description: "",
+        status: "",
         tags: { frontend: false, ux: false, ui: false, bug: false },
       };
       this.$refs.form.resetValidation();
@@ -238,7 +264,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* Özel stiller buraya eklenebilir */
-</style>
