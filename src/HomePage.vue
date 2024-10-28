@@ -1,5 +1,4 @@
 <template>
-  <!-- Ana container -->
   <v-container class="my-5">
     <!-- Ürün başlığı ve sıralama kısmı -->
     <h2>Our Products</h2>
@@ -66,7 +65,8 @@
 
     <!-- Ürün ekleme formu için dialog -->
     <v-dialog v-model="dialog" max-width="600px">
-      <v-form ref="form" v-model="isFormValid">
+      <!-- Form validation için v-form bileşeni, @submit.prevent ile doğrulamadan geçmezse ilerlemeyi engeller -->
+      <v-form ref="form" v-model="isFormValid" @submit.prevent="saveProduct">
         <v-card>
           <v-card-title>
             <span class="text-h5">Add New Product</span>
@@ -117,10 +117,16 @@
                 ></v-checkbox>
               </v-col>
               <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.ux" label="UX"></v-checkbox>
+                <v-checkbox
+                  v-model="newProduct.tags.ux"
+                  label="UX"
+                ></v-checkbox>
               </v-col>
               <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.ui" label="UI"></v-checkbox>
+                <v-checkbox
+                  v-model="newProduct.tags.ui"
+                  label="UI"
+                ></v-checkbox>
               </v-col>
               <v-col cols="3">
                 <v-checkbox
@@ -134,7 +140,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn text @click="dialog = false">Cancel</v-btn>
-            <v-btn color="primary" @click="saveProduct">Save</v-btn>
+            <v-btn color="primary" type="submit">Save</v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
@@ -147,7 +153,7 @@ export default {
   name: "HomePage",
   data() {
     return {
-      dialog: false,
+      dialog: false, // Dialog açma/kapama kontrolü.
       sortBy: "Status",
       products: [
         {
@@ -176,16 +182,11 @@ export default {
         name: "",
         description: "",
         status: "",
-        tags: {
-          frontend: false,
-          ux: false,
-          ui: false,
-          bug: false,
-        },
+        tags: { frontend: false, ux: false, ui: false, bug: false },
       },
       rules: {
-        required: value => !!value || 'This field is required.',
-        minLength: v => v.length >= 5 || 'Minimum 5 characters required.',
+        required: (value) => !!value || "This field is required.", // Zorunlu alan
+        minLength: (v) => v.length >= 5 || "Minimum 5 characters required.", // Min 5 karakter
       },
     };
   },
@@ -213,6 +214,7 @@ export default {
     },
     saveProduct() {
       if (this.$refs.form.validate()) {
+        // Form geçerliyse ürün ekle
         const selectedTags = Object.keys(this.newProduct.tags).filter(
           (tag) => this.newProduct.tags[tag]
         );
@@ -227,13 +229,14 @@ export default {
       }
     },
     resetForm() {
+      // Formu sıfırla
       this.newProduct = {
         name: "",
         description: "",
         status: "",
         tags: { frontend: false, ux: false, ui: false, bug: false },
       };
-      this.$refs.form.resetValidation();
+      this.$refs.form.resetValidation(); // Validation sıfırlama
     },
     showMore() {
       alert("Show more products...");
@@ -241,5 +244,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>
