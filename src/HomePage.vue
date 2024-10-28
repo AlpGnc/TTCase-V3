@@ -3,13 +3,11 @@
     <!-- Ürün başlığı ve sıralama kısmı -->
     <h2>Our Products</h2>
 
-    <!-- Ürün sayısı ve sıralama menüsü -->
     <div class="d-flex justify-space-between align-center mb-4">
       <div>
         <!-- Toplam ürün sayısını gösterir -->
         <strong>{{ products.length }} Products</strong>
-
-        <!-- Ürünleri duruma göre sıralamak için dropdown menüsü -->
+        
         <v-select
           v-model="sortBy"
           :items="['In Progress', 'Completed', 'Pending']"
@@ -18,55 +16,38 @@
         ></v-select>
       </div>
 
-      <!-- Yeni ürün ekleme butonu, openDialog fonksiyonunu tetikler -->
+      <!-- Yeni ürün ekleme butonu -->
       <v-btn color="primary" class="add-product-btn" @click="openDialog">
         Add New Product
       </v-btn>
     </div>
 
-    <!-- Ürün listesi: Her ürün için bir kart oluşturuluyor -->
+    <!-- Ürün listesi -->
     <v-row v-for="(product, index) in sortedProducts" :key="index" class="mb-3">
       <v-col>
         <v-card class="product-card">
           <v-card-text>
             <div class="d-flex justify-space-between">
-              <!-- Ürün adı ve açıklaması -->
               <div>
                 <h3 class="product-name">{{ product.name }}</h3>
                 <p>{{ product.description }}</p>
               </div>
-
-              <!-- Ürünü silmek için buton, deleteProduct fonksiyonunu tetikler -->
-              <v-btn
-                color="error"
-                @click="deleteProduct(index)"
-                class="delete-btn"
-              >
+              <v-btn color="error" @click="deleteProduct(index)" class="delete-btn">
                 Delete
               </v-btn>
             </div>
-
-            <!-- Ürün durumu ve etiketlerini çiplerle gösterir -->
             <div class="d-flex mt-2">
-              <v-chip v-if="product.status === 'Completed'" color="green">
-                Completed
-              </v-chip>
-              <v-chip v-if="product.status === 'Pending'" color="orange">
-                Pending
-              </v-chip>
-              <v-chip v-if="product.status === 'In Progress'" color="blue">
-                In Progress
-              </v-chip>
-              <v-chip v-for="tag in product.tags" :key="tag" class="ml-2">{{
-                tag
-              }}</v-chip>
+              <v-chip v-if="product.status === 'Completed'" color="green">Completed</v-chip>
+              <v-chip v-if="product.status === 'Pending'" color="orange">Pending</v-chip>
+              <v-chip v-if="product.status === 'In Progress'" color="blue">In Progress</v-chip>
+              <v-chip v-for="tag in product.tags" :key="tag" class="ml-2">{{ tag }}</v-chip>
             </div>
           </v-card-text>
         </v-card>
       </v-col>
     </v-row>
 
-    <!-- Daha fazla ürün gösterme butonu, showMore fonksiyonunu çağırır -->
+    <!-- Show more button -->
     <v-btn block color="primary" @click="showMore" class="show-more-btn">
       Show More
     </v-btn>
@@ -75,7 +56,6 @@
     <v-dialog v-model="dialog" max-width="600px">
       <v-form ref="form" v-model="isFormValid" lazy-validation>
         <v-card>
-          <!-- Başlık ve kapatma ikonu -->
           <v-card-title>
             <span class="text-h5">Add New Product</span>
             <v-spacer></v-spacer>
@@ -84,7 +64,6 @@
             </v-btn>
           </v-card-title>
 
-          <!-- Ürün ekleme formu alanları -->
           <v-card-text>
             <!-- Ürün adı giriş alanı -->
             <v-text-field
@@ -120,40 +99,25 @@
                 <label>Select Tags</label>
               </v-col>
               <v-col cols="3">
-                <v-checkbox
-                  v-model="newProduct.tags.frontend"
-                  label="Frontend"
-                ></v-checkbox>
+                <v-checkbox v-model="newProduct.tags.frontend" label="Frontend"></v-checkbox>
               </v-col>
               <v-col cols="3">
-                <v-checkbox
-                  v-model="newProduct.tags.ux"
-                  label="UX"
-                ></v-checkbox>
+                <v-checkbox v-model="newProduct.tags.ux" label="UX"></v-checkbox>
               </v-col>
               <v-col cols="3">
-                <v-checkbox
-                  v-model="newProduct.tags.ui"
-                  label="UI"
-                ></v-checkbox>
+                <v-checkbox v-model="newProduct.tags.ui" label="UI"></v-checkbox>
               </v-col>
               <v-col cols="3">
-                <v-checkbox
-                  v-model="newProduct.tags.bug"
-                  label="Bug"
-                ></v-checkbox>
+                <v-checkbox v-model="newProduct.tags.bug" label="Bug"></v-checkbox>
               </v-col>
             </v-row>
           </v-card-text>
 
-          <!-- Form butonları (Kaydet ve İptal) -->
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn text @click="dialog = false">Cancel</v-btn>
-            <!-- Save butonu, form geçerli değilse devre dışı bırakılır -->
-            <v-btn color="primary" @click="submitForm" :disabled="!isFormValid"
-              >Save</v-btn
-            >
+            <!-- Formun geçerli olmasına bakarak save butonunun işlevini engelliyoruz -->
+            <v-btn color="primary" @click="submitForm">Save</v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
@@ -166,15 +130,13 @@ export default {
   name: "HomePage",
   data() {
     return {
-      dialog: false, // Formu açmak/kapatmak için kullanılan kontrol
-      isFormValid: false, // Form geçerliliğini takip eder
-      sortBy: "Status", // Ürünlerin sıralama kriteri
+      dialog: false,
+      isFormValid: false,
+      sortBy: "Status",
       products: [
-        // Örnek ürün listesi
         {
           name: "[Product Name]",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
           status: "Completed",
           tags: ["Frontend", "UX", "Bug"],
         },
@@ -192,22 +154,23 @@ export default {
         },
       ],
       newProduct: {
-        // Yeni ürün eklemek için form verileri
         name: "",
         description: "",
         status: "",
         tags: { frontend: false, ux: false, ui: false, bug: false },
       },
       rules: {
-        // Form doğrulama kuralları
         required: (value) => !!value || "This field is required.",
         minLength: (v) => v.length >= 5 || "Minimum 5 characters required.",
+        minTagsSelected: () => {
+          const tags = Object.values(this.newProduct.tags);
+          return tags.includes(true) || "At least one tag must be selected.";
+        },
       },
     };
   },
   computed: {
     sortedProducts() {
-      // Seçilen duruma göre ürünleri sıralar
       if (!this.sortBy) return this.products;
 
       return [...this.products].sort((a) => {
@@ -223,17 +186,16 @@ export default {
   },
   methods: {
     deleteProduct(index) {
-      // Ürünü diziden siler
       this.products.splice(index, 1);
     },
     openDialog() {
-      // Formu açar ve önceki doğrulamaları sıfırlar
       this.dialog = true;
       this.$refs.form.resetValidation();
     },
     submitForm() {
-      // Form doğrulamayı kontrol eder; geçerliyse ürünü ekler
-      if (this.$refs.form.validate()) {
+      // Form doğrulamayı kontrol ediyor; geçerliyse kaydediyor
+      const tagsSelected = Object.values(this.newProduct.tags).some((tag) => tag);
+      if (this.$refs.form.validate() && tagsSelected) {
         const selectedTags = Object.keys(this.newProduct.tags).filter(
           (tag) => this.newProduct.tags[tag]
         );
@@ -243,12 +205,13 @@ export default {
           status: this.newProduct.status,
           tags: selectedTags,
         });
-        this.dialog = false; // Formu kapatır
-        this.resetForm(); // Form alanlarını sıfırlar
+        this.dialog = false;
+        this.resetForm();
+      } else {
+        alert("Tüm alanları doldurunuz lütfen.");
       }
     },
     resetForm() {
-      // Formu sıfırlar ve doğrulamaları temizler
       this.newProduct = {
         name: "",
         description: "",
@@ -258,9 +221,10 @@ export default {
       this.$refs.form.resetValidation();
     },
     showMore() {
-      // "Show More" butonuna basıldığında çalışır
       alert("Show more products...");
     },
   },
 };
 </script>
+
+<style scoped></style>
