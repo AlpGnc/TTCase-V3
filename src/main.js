@@ -1,25 +1,19 @@
-/**
- * main.js
- *
- * Bootstraps Vuetify and other plugins then mounts the App
- */
-
 // Plugins
-import { registerPlugins } from '@/plugins'; // Bu satırda tüm eklentileri (Vuetify gibi) kaydeden fonksiyonu içe aktarıyoruz
+import { registerPlugins } from '@/plugins';
 
 // Components
-import App from './App.vue'; // Ana uygulama bileşenini buraya dahil ediyoruz
+import App from './App.vue';
 
 // Composables
-import { createApp } from 'vue'; // Vue uygulamasını başlatmak için gerekli fonksiyonu içe aktarıyoruz
+import { createApp } from 'vue';
 
 // Router
-import router from './router'; // Vue Router'ı ekliyoruz, sayfalar arası yönlendirme için gerekli
+import router from './router';
 
-const app = createApp(App); // Uygulamayı başlatmak için App bileşenini temel alıyoruz
+const app = createApp(App);
 
-registerPlugins(app); // Vuetify ve diğer eklentileri uygulamaya eklemek için bu fonksiyonu çağırıyoruz
+registerPlugins(app);
 
-app.use(router); // Router'ı uygulamaya dahil ediyoruz, böylece yönlendirme çalışır
+app.use(router);
 
-app.mount('#app'); // Uygulama '#app' elementine monte ediliyor (index.html dosyasındaki)
+app.mount('#app');

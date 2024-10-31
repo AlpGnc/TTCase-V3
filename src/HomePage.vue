@@ -7,7 +7,7 @@
       <div>
         <!-- Toplam ürün sayısını gösterir -->
         <strong>{{ products.length }} Products</strong>
-        
+
         <v-select
           v-model="sortBy"
           :items="['In Progress', 'Completed', 'Pending']"
@@ -17,13 +17,13 @@
       </div>
 
       <!-- Yeni ürün ekleme butonu -->
-      <v-btn color="primary" class="add-product-btn" @click="openDialog">
+      <v-btn color="primary" class="add-product-btn" @click="addNewProduct">
         Add New Product
       </v-btn>
     </div>
 
     <!-- Ürün listesi -->
-    <v-row v-for="(product, index) in sortedProducts" :key="index" class="mb-3">
+    <v-row v-for="product in sortedProducts" :key="product.id" class="mb-3">
       <v-col>
         <v-card class="product-card">
           <v-card-text>
@@ -32,15 +32,27 @@
                 <h3 class="product-name">{{ product.name }}</h3>
                 <p>{{ product.description }}</p>
               </div>
-              <v-btn color="error" @click="deleteProduct(index)" class="delete-btn">
+              <v-btn
+                color="error"
+                @click="deleteProduct(product.id)"
+                class="delete-btn"
+              >
                 Delete
               </v-btn>
             </div>
             <div class="d-flex mt-2">
-              <v-chip v-if="product.status === 'Completed'" color="green">Completed</v-chip>
-              <v-chip v-if="product.status === 'Pending'" color="orange">Pending</v-chip>
-              <v-chip v-if="product.status === 'In Progress'" color="blue">In Progress</v-chip>
-              <v-chip v-for="tag in product.tags" :key="tag" class="ml-2">{{ tag }}</v-chip>
+              <v-chip v-if="product.status === 'Completed'" color="green"
+                >Completed</v-chip
+              >
+              <v-chip v-if="product.status === 'Pending'" color="orange"
+                >Pending</v-chip
+              >
+              <v-chip v-if="product.status === 'In Progress'" color="blue"
+                >In Progress</v-chip
+              >
+              <v-chip v-for="tag in product.tags" :key="tag" class="ml-2">{{
+                tag
+              }}</v-chip>
             </div>
           </v-card-text>
         </v-card>
@@ -48,7 +60,13 @@
     </v-row>
 
     <!-- Show more button -->
-    <v-btn block color="primary" @click="showMore" class="show-more-btn">
+    <v-btn
+      block
+      color="primary"
+      @click="getItems"
+      v-if="!hideLoadButton"
+      class="show-more-btn"
+    >
       Show More
     </v-btn>
 
@@ -99,16 +117,28 @@
                 <label>Select Tags</label>
               </v-col>
               <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.frontend" label="Frontend"></v-checkbox>
+                <v-checkbox
+                  v-model="newProduct.tags.frontend"
+                  label="Frontend"
+                ></v-checkbox>
               </v-col>
               <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.ux" label="UX"></v-checkbox>
+                <v-checkbox
+                  v-model="newProduct.tags.ux"
+                  label="UX"
+                ></v-checkbox>
               </v-col>
               <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.ui" label="UI"></v-checkbox>
+                <v-checkbox
+                  v-model="newProduct.tags.ui"
+                  label="UI"
+                ></v-checkbox>
               </v-col>
               <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.bug" label="Bug"></v-checkbox>
+                <v-checkbox
+                  v-model="newProduct.tags.bug"
+                  label="Bug"
+                ></v-checkbox>
               </v-col>
             </v-row>
           </v-card-text>
@@ -126,33 +156,25 @@
 </template>
 
 <script>
+import apiClient from "@/services/api";
+import cloneDeep from "lodash/cloneDeep";
+
 export default {
   name: "HomePage",
   data() {
     return {
       dialog: false,
       isFormValid: false,
-      sortBy: "Status",
-      products: [
-        {
-          name: "[Product Name]",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-          status: "Completed",
-          tags: ["Frontend", "UX", "Bug"],
-        },
-        {
-          name: "[Product Name]",
-          description: "Mauris dictum varius molestie.",
-          status: "Pending",
-          tags: ["UI", "Bug"],
-        },
-        {
-          name: "[Product Name]",
-          description: "Vestibulum vel vehicula metus.",
-          status: "In Progress",
-          tags: ["Frontend", "UX"],
-        },
-      ],
+      sortBy: "",
+      products: [],
+      formData: {},
+      loading: false,
+      hideLoadButton: false,
+      showLoaders: false,
+      listQueryParams: {
+        _page: 1,
+        _limit: 10,
+      },
       newProduct: {
         name: "",
         description: "",
@@ -171,44 +193,115 @@ export default {
   },
   computed: {
     sortedProducts() {
-      if (!this.sortBy) return this.products;
+      let filteredProducts = this.products;
 
-      return [...this.products].sort((a) => {
-        if (this.sortBy === "In Progress")
-          return a.status === "In Progress" ? -1 : 1;
-        else if (this.sortBy === "Completed")
-          return a.status === "Completed" ? -1 : 1;
-        else if (this.sortBy === "Pending")
-          return a.status === "Pending" ? -1 : 1;
-        return 0;
-      });
+      if (this.sortBy && this.sortBy !== "Status") {
+        filteredProducts = filteredProducts.filter(
+          (product) => product.status === this.sortBy
+        );
+      }
+
+      return filteredProducts;
     },
   },
+  mounted() {
+    this.getItems();
+    // Eğer 'FILTERS_UPDATE' olayını dinlemek istiyorsanız, aşağıdaki satırı aktif edin
+    // this.$root.$on('FILTERS_UPDATE', this.filtersUpdateHandler)
+  },
   methods: {
-    deleteProduct(index) {
-      this.products.splice(index, 1);
-    },
-    openDialog() {
+    openForm(item) {
+      this.formData = cloneDeep(item);
       this.dialog = true;
-      this.$refs.form.resetValidation();
+      // Form verilerini 'newProduct' ile eşleştiriyoruz
+      this.newProduct = {
+        ...this.formData,
+        tags: {
+          frontend: this.formData.tags.includes("Frontend"),
+          ux: this.formData.tags.includes("UX"),
+          ui: this.formData.tags.includes("UI"),
+          bug: this.formData.tags.includes("Bug"),
+        },
+      };
+    },
+    addNewProduct() {
+      // Yeni ürün eklemek için formu açıyoruz
+      this.openForm({
+        name: "",
+        description: "",
+        status: "",
+        tags: [],
+      });
+    },
+    getItems() {
+      this.loading = true;
+      apiClient
+        .get("products", { params: this.listQueryParams })
+        .then((response) => {
+          this.products = this.products.concat(response.data);
+          this.hideLoadButton = response.data.length === 0;
+          // Sayfayı bir artırarak bir sonraki ürün grubunu yüklemeye hazırlıyoruz
+          this.listQueryParams._page += 1;
+        })
+        .catch((error) => {
+          console.error(error, "Home@getItems");
+        })
+        .finally(() => {
+          if (this.showLoaders) {
+            // Gerçek dünya senaryosunu simüle etmek için yükleme süresini uzatıyoruz
+            setTimeout(() => {
+              this.loading = false;
+              this.showLoaders = false;
+            }, 2000);
+          } else {
+            this.loading = false;
+          }
+        });
     },
     submitForm() {
       // Form doğrulamayı kontrol ediyor; geçerliyse kaydediyor
-      const tagsSelected = Object.values(this.newProduct.tags).some((tag) => tag);
+      const tagsSelected = Object.values(this.newProduct.tags).some(
+        (tag) => tag
+      );
       if (this.$refs.form.validate() && tagsSelected) {
         const selectedTags = Object.keys(this.newProduct.tags).filter(
           (tag) => this.newProduct.tags[tag]
         );
-        this.products.push({
+
+        const productData = {
           name: this.newProduct.name,
           description: this.newProduct.description,
           status: this.newProduct.status,
           tags: selectedTags,
-        });
-        this.dialog = false;
-        this.resetForm();
+        };
+
+        // Eğer formData'da bir id varsa, güncelleme işlemi yapıyoruz
+        if (this.formData.id) {
+          apiClient
+            .put(`/products/${this.formData.id}`, productData)
+            .then(() => {
+              this.dialog = false;
+              this.resetForm();
+              this.refreshItems();
+            })
+            .catch((error) => {
+              console.error("Ürün güncellenirken hata oluştu:", error);
+            });
+        } else {
+          // Yeni ürün ekleme işlemi
+          apiClient
+            .post("/products", productData)
+            .then(() => {
+              this.dialog = false;
+              this.resetForm();
+              this.refreshItems();
+            })
+            .catch((error) => {
+              console.error("Ürün eklenirken hata oluştu:", error);
+            });
+        }
       } else {
-        alert("Tüm alanları doldurunuz lütfen.");
+        alert("Lütfen tüm alanları doldurun.");
       }
     },
     resetForm() {
@@ -218,11 +311,34 @@ export default {
         status: "",
         tags: { frontend: false, ux: false, ui: false, bug: false },
       };
-      this.$refs.form.resetValidation();
+      this.formData = {};
+      if (this.$refs.form) {
+        this.$refs.form.resetValidation();
+      }
+    },
+    refreshItems() {
+      // Ürün listesini sıfırlayıp yeniden yüklüyoruz
+      this.products = [];
+      this.listQueryParams._page = 1;
+      this.getItems();
+    },
+    deleteProduct(productId) {
+      apiClient
+        .delete(`/products/${productId}`)
+        .then(() => {
+          this.refreshItems(); // Ürün listesini güncelle
+        })
+        .catch((error) => {
+          console.error("Ürün silinirken hata oluştu:", error);
+        });
     },
     showMore() {
-      alert("Show more products...");
+      this.getItems();
     },
+    // Eğer filtreleri güncellemek istiyorsanız, aşağıdaki metodu tanımlayabilirsiniz
+    // filtersUpdateHandler(filters) {
+    //   // Filtreleri uygulamak için gerekli işlemler
+    // },
   },
 };
 </script>

@@ -1,0 +1,33 @@
+{
+  "products": [
+    {
+      "id": "e886",
+      "name": "43634436",
+      "description": "43634436",
+      "status": "In Progress",
+      "tags": [
+        "ux",
+        "ui"
+      ]
+    },
+    {
+      "id": "5849",
+      "name": "32532523",
+      "description": "532532",
+      "status": "Completed",
+      "tags": [
+        "bug"
+      ]
+    },
+    {
+      "id": "c512",
+      "name": "32532532",
+      "description": "523523",
+      "status": "In Progress",
+      "tags": [
+        "ui",
+        "bug"
+      ]
+    }
+  ]
+}
