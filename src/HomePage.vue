@@ -59,8 +59,8 @@
       </v-col>
     </v-row>
 
-    <!-- Show more button -->
-    <v-btn
+    <!-- Show more button devre dısı-->
+    <!-- <v-btn
       block
       color="primary"
       @click="getItems"
@@ -68,7 +68,7 @@
       class="show-more-btn"
     >
       Show More
-    </v-btn>
+    </v-btn> -->
 
     <!-- Yeni ürün ekleme formu için açılır pencere -->
     <v-dialog v-model="dialog" max-width="600px">
