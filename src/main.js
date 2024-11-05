@@ -17,8 +17,8 @@ const app = createApp(App);
 const pinia = createPinia(); // Pinia’yı oluşturuyoruz
 app.use(pinia); // Uygulamaya Pinia’yı dahil ediyoruz
 
-registerPlugins(app);
+registerPlugins(app); // Tüm eklentileri kaydediyoruz
 
-app.use(router);
+app.use(router); // Router'ı ekliyoruz
 
-app.mount('#app');
+app.mount('#app'); // Uygulamayı başlatıyoruz

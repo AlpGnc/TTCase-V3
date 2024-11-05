@@ -1,0 +1,53 @@
+// src/styles/variables.scss
+$btn-sizes: (
+  "default": 40,
+  "large": 54,
+);
+// Amaç: Buton boyutlarını tanımlar.
+// Detay: default ve large olarak iki farklı buton boyutu tanımlanmıştır. default buton yüksekliği 40 piksel, large buton yüksekliği ise 54 piksel olarak ayarlanır.
+// Kullanım: Projede bu boyutları kullanan butonlar için bu değişkeni çağırarak sabit boyut değerleri uygulanabilir.
+$border-radius-root: 8px;
+//Amaç: Kenar yumuşatma (border-radius) değeri tanımlar.
+//Detay: Bu değişkenin değeri 8 piksel olarak ayarlanmıştır.
+//Kullanım: Kartlar, butonlar ve diğer bileşenlerde köşelerin 8 piksel yumuşatılmasını sağlar.
+$btn-border-radius: 8px !default;
+//Amaç: Butonlar için kenar yumuşatma değeri tanımlar.
+//Detay: !default ifadesi ile başka bir yerde tanımlanmadıysa bu değerin kullanılmasını sağlar. Buton köşelerinin 8 piksel yumuşatılmasını sağlar.
+//Kullanım: Tüm butonlarda varsayılan kenar yumuşatma değeri olarak kullanılır.
+$btn-text-transform: capitalize;
+//Amaç: Buton metinlerinin büyük/küçük harf ayarını belirler.
+//Detay: capitalize değeri ile buton metinlerinin ilk harfi büyük, diğer harfleri küçük olur.
+//Kullanım: Tüm butonlarda metinlerin stilini belirler.
+$body-font-family: "Public Sans";
+//Amaç: Uygulama genelinde kullanılan yazı tipini belirler.
+//Detay: Public Sans yazı tipi tüm sayfada varsayılan yazı tipi olarak ayarlanır.
+//Kullanım: Bu değişken, projede metin stilini belirleyen yerlere uygulanır.
+$card-shaped-border-radius: 16px;
+$toolbar-shaped-border-radius: 16px;
+//Amaç: Kart ve araç çubuğu bileşenleri için özel kenar yumuşatma değerleri tanımlar.
+//Detay: Kartlar ve araç çubukları için 16 piksel kenar yumuşatma değeri kullanılır.
+//Kullanım: Kart ve araç çubuğu gibi bileşenlerde daha yumuşak köşeler sağlamak için bu değer kullanılır.
+$list-dense-min-height: 36px;
+$list-item-title-font-size: 14px;
+//Amaç: Liste öğelerinin yüksekliğini ve yazı tipi boyutunu belirler.
+//Detay:
+//$list-dense-min-height: Liste öğeleri için minimum 36 piksel yüksekliği tanımlar.
+//$list-item-title-font-size: Liste başlıklarının 14 piksel yazı tipi boyutunda olmasını sağlar.
+//Kullanım: Listelerde öğelerin ve başlıkların belirli boyutlarda görünmesini sağlar.
+
+$app-border-type: 1px solid rgba(255, 255, 255, 0.1);
+//Amaç: Kenarlık türünü ve rengini tanımlar.
+//Detay: Kenarlık 1 piksel kalınlığında ve yarı saydam beyaz olarak ayarlanmıştır (rgba(255, 255, 255, 0.1)).
+//Kullanım: Kenarlık eklemek istediğiniz öğelere bu değişkeni uygulayarak aynı stili kullanabilirsiniz.
+$primary-color: #00ff40;
+//Amaç: Uygulamanın ana arka plan rengini tanımlar.
+//Detay: Koyu bir arka plan rengi olan #090010 rengi tanımlanmıştır.
+//Kullanım: Arka plan veya ana renk olarak kullanılacak yerlerde bu renk uygulanabilir.
+$text-color-passive: rgba(255, 255, 255, 0.4);
+//Amaç: Pasif veya önemsiz metinler için özel bir renk tanımlar.
+//Detay: Yarı saydam beyaz (rgba(255, 255, 255, 0.4)) kullanarak pasif metinlerin daha az dikkat çekmesini sağlar.
+//Kullanım: Pasif metinlerin rengini belirlemek için kullanılır, örneğin açıklamalar veya alt metinler için.
+$divider-color: rgba(8, 41, 230, 0.2);
+//Amaç: Bölücülerin (divider) rengini tanımlar.
+//Detay: Yarı saydam beyaz (rgba(255, 255, 255, 0.2)) kullanarak bölücülerin daha az belirgin görünmesini sağlar.
+//Kullanım: Kart, liste veya bölüm ayracı olarak kullanılan çizgilerde bu renk kullanılır.

@@ -1,0 +1,34 @@
+// Noktalı virgülü kaldırın
+@import './variables.scss'
+
+// Temanız için global stiller
+.theme--dark.v-application
+  background: $primary-color !important
+
+  .app-border-bottom-effect
+    border-bottom: $app-border-type !important
+    // Amaç: .app-border-bottom-effect sınıfını, alt kenarlık efekti uygulamak için kullanır.
+    // Ne yapar: Bu sınıf, $app-border-type değişkenini kullanarak alt kenarlık (border-bottom) oluşturur. $app-border-type, kenarlığın kalınlığı ve rengi gibi özellikleri içerir.
+    // Kullanım: Bu sınıfı herhangi bir öğeye uygulayarak, alt kenarlık efekti vermek istediğinizde kullanabilirsiniz.
+
+  .app-border-right-effect
+    border-right: $app-border-type !important
+    // Amaç: .app-border-right-effect sınıfını, sağ kenarlık efekti uygulamak için kullanır.
+    // Ne yapar: $app-border-type değişkenini kullanarak sağ kenarlık (border-right) oluşturur.
+    // Kullanım: Bu sınıf, sağ kenarlık eklemek istediğiniz öğelere uygulanabilir.
+
+.passive-text
+  color: $text-color-passive !important
+  // Amaç: .passive-text sınıfıyla, pasif durumdaki metinlerin rengini belirler.
+  // Ne yapar: $text-color-passive değişkeniyle tanımlanan renk, genellikle pasif veya önemsiz metinler için kullanılır. Bu sınıf, metin rengini rgba değeriyle daha soluk bir renge ayarlayarak, dikkat çekmeyen bir stil sağlar.
+  // Kullanım: Örneğin, açıklama metinleri veya düşük öncelikli metinler için bu sınıf kullanılabilir.
+
+
+.theme--dark.v-breadcrumbs .v-breadcrumbs__divider,
+.theme--dark.v-breadcrumbs .v-breadcrumbs__item--disabled
+  color: $divider-color
+  //Amaç: Vuetify’ın v-breadcrumbs bileşeni için özel renk ayarı yapar. Koyu temada (.theme--dark) geçerli olur.
+  //Ne yapar:
+  // .v-breadcrumbs__divider: Ekmek kırıntıları (breadcrumb) arasındaki ayraçların rengini $divider-color olarak ayarlar.
+  //.v-breadcrumbs__item--disabled: Devre dışı bırakılmış ekmek kırıntıları (breadcrumb) öğelerinin rengini $divider-color yapar.
+  //Önem: Bu stil, ekmek kırıntısı bileşeninin görünümünü koyu temada daha belirgin hale getirir.

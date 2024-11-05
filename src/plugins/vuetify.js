@@ -1,21 +1,34 @@
 /**
  * plugins/vuetify.js
  *
- * Framework documentation: https://vuetifyjs.com`
+ * Framework documentation: https://vuetifyjs.com
  */
 
 // Styles
-import '@mdi/font/css/materialdesignicons.css'
-import 'vuetify/styles'
+import "vuetify/styles"; // Vuetify varsayılan stilleri
+import "@/styles/app.sass"; // Özel stil dosyamızı dahil ediyoruz
 
 // Composables
-import { createVuetify } from 'vuetify'
-import 'vuetify/styles'; // Vuetify stillerini dahil ediyoruz
+import { createVuetify } from "vuetify";
 
-
-// https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
+// Tema renklerini ve diğer ayarları burada tanımlıyoruz
 export default createVuetify({
   theme: {
-    defaultTheme: 'dark',
+    defaultTheme: "dark",
+    themes: {
+      dark: {
+        dark: true,
+        colors: {
+          background: "#090010", // Arka plan rengi
+          surface: "#1A1A2E", // Kart ve yüzey rengi
+          primary: "#00ff40", // Birincil renk
+          secondary: "#03DAC5", // İkincil renk
+          error: "#CF6679", // Hata rengi
+          info: "#2196F3", // Bilgi rengi
+          success: "#4CAF50", // Başarı rengi
+          warning: "#FB8C00", // Uyarı rengi
+        },
+      },
+    },
   },
-})
+});
