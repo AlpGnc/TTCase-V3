@@ -1,19 +1,19 @@
 <template>
-  <!-- Ana konteyner, ürün listesini içerir -->
+  <!-- Main container holding the product list -->
   <v-container class="my-5">
     <v-row>
-      <!-- Ürün Listesi Tam Genişlikte -->
+      <!-- Product List Column -->
       <v-col cols="12">
         <h2>Our Products</h2>
-        <!-- Ürün sayısını gösteren başlık ve sıralama seçeneği -->
+        <!-- Header with product count and sort option -->
         <div class="d-flex justify-space-between align-center mb-4">
           <div class="d-flex align-center">
             <strong>{{ filteredProducts.length }} Products</strong>
 
-            <!-- Ürünleri duruma göre sıralamak için bir seçim menüsü -->
+            <!-- Sort by status -->
             <v-select
               v-model="sortBy"
-              :items="['In Progress', 'Completed', 'Pending']"
+              :items="sortOptions"
               label="Sort By"
               class="ml-3"
               dense
@@ -21,13 +21,13 @@
             ></v-select>
           </div>
 
-          <!-- Yeni ürün eklemek için buton, dialog açılır -->
+          <!-- Button to add a new product -->
           <v-btn color="primary" class="add-product-btn" @click="addNewProduct">
             Add New Product
           </v-btn>
         </div>
 
-        <!-- Ürün listesi, filtrelenmiş ürünleri gösterir -->
+        <!-- Product list -->
         <v-row>
           <v-col
             v-for="product in filteredProducts"
@@ -37,24 +37,23 @@
           >
             <v-card class="product-card">
               <v-card-text>
-                <!-- Ürün başlığı ve açıklaması -->
-                <div class="d-flex justify-space-between">
+                <!-- Product header with name and delete button -->
+                <div class="d-flex justify-space-between align-center">
                   <div>
                     <h3 class="product-name">{{ product.name }}</h3>
                     <p>{{ product.description }}</p>
                   </div>
-                  <!-- Ürün silme butonu -->
                   <v-btn
                     color="error"
                     @click="deleteProduct(product.id)"
                     class="delete-btn"
-                    density
+                    height="45px"
                     
                   >
                     Delete
                   </v-btn>
                 </div>
-                <!-- Ürün durumu ve etiketleri gösteren çipler -->
+                <!-- Product status and tags chips -->
                 <div class="d-flex mt-2">
                   <v-chip
                     v-if="product.status === 'Completed'"
@@ -96,7 +95,7 @@
       </v-col>
     </v-row>
 
-    <!-- Yeni ürün ekleme formu için açılır pencere (dialog) -->
+    <!-- Dialog for adding a new product -->
     <v-dialog v-model="dialog" max-width="600px">
       <v-card>
         <v-card-title>
@@ -108,9 +107,9 @@
         </v-card-title>
 
         <v-card-text>
-          <!-- Ürün ekleme formu, doğrulama ile birlikte -->
+          <!-- New product form -->
           <v-form ref="form" v-model="isFormValid" lazy-validation>
-            <!-- Ürün adı -->
+            <!-- Product Name -->
             <v-text-field
               label="Product Name"
               v-model="newProduct.name"
@@ -119,7 +118,7 @@
               required
             ></v-text-field>
 
-            <!-- Ürün açıklaması -->
+            <!-- Description -->
             <v-textarea
               label="Description"
               v-model="newProduct.description"
@@ -128,32 +127,27 @@
               required
             ></v-textarea>
 
-            <!-- Ürün durumu (status) seçme menüsü -->
+            <!-- Status Selection -->
             <v-select
               label="Select Status"
               v-model="newProduct.status"
-              :items="['In Progress', 'Completed', 'Pending']"
+              :items="statusOptions"
               outlined
               :rules="[rules.required]"
               required
             ></v-select>
 
-            <!-- Ürün etiketleri (tags) seçme alanı -->
+            <!-- Tags Selection -->
             <v-row>
               <v-col cols="12">
                 <label>Select Tags</label>
               </v-col>
-              <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.frontend" label="Frontend"></v-checkbox>
-              </v-col>
-              <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.ux" label="UX"></v-checkbox>
-              </v-col>
-              <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.ui" label="UI"></v-checkbox>
-              </v-col>
-              <v-col cols="3">
-                <v-checkbox v-model="newProduct.tags.bug" label="Bug"></v-checkbox>
+              <v-col cols="3" v-for="tag in availableTags" :key="tag">
+                <v-checkbox
+                  v-model="newProduct.tags"
+                  :label="tag"
+                  :value="tag"
+                ></v-checkbox>
               </v-col>
             </v-row>
           </v-form>
@@ -162,7 +156,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="dialog = false">Cancel</v-btn>
-          <!-- Formu gönderme butonu, submitForm metodunu çağırır -->
+          <!-- Submit form button -->
           <v-btn color="green" @click="submitForm">Save</v-btn>
         </v-card-actions>
       </v-card>
@@ -173,29 +167,33 @@
 <script>
 import { computed, ref, onMounted } from 'vue';
 import { useFilterStore } from '@/stores/useFilterStore';
-// import FilterMenu from './components/FilterMenu.vue'; // Artık gerek yok
 import apiClient from '@/services/api';
 
 export default {
-  // components: { FilterMenu }, // Artık gerek yok
   setup() {
-    const filterStore = useFilterStore(); // Filtre durumlarını yöneten Pinia mağazası
-    const products = ref([]); // Tüm ürünleri tutan dizi
-    const sortBy = ref(''); // Ürünleri sıralamak için kullanılan değer
-    const dialog = ref(false); // Ürün ekleme formu dialogunun görünürlüğünü kontrol eder
-    const isFormValid = ref(false); // Form doğrulamasını izler
+    const filterStore = useFilterStore();
+    const products = ref([]);
+    const sortBy = ref('All'); // Initialize sortBy with 'All'
+    const dialog = ref(false);
+    const isFormValid = ref(false);
+
+    // New product data
     const newProduct = ref({
       name: '',
       description: '',
       status: '',
-      tags: { frontend: false, ux: false, ui: false, bug: false },
-    }); // Yeni ürün bilgilerini tutan obje
+      tags: [],
+    });
 
-    // Filtrelenmiş ürünleri hesaplayan özellik, filtre durumu, etiketler ve arama sorgusuna göre filtreler
+    // Options
+    const statusOptions = ['In Progress', 'Completed', 'Pending'];
+    const sortOptions = ['All', ...statusOptions];
+    const availableTags = ['Frontend', 'UX', 'UI', 'Bug'];
+
     const filteredProducts = computed(() => {
       const searchQuery = filterStore.filters.searchQuery.toLowerCase();
 
-      return products.value.filter((product) => {
+      let productsArray = products.value.filter((product) => {
         const statusMatch =
           filterStore.filters.status.length === 0 ||
           filterStore.filters.status.includes(product.status);
@@ -211,87 +209,104 @@ export default {
 
         return statusMatch && tagsMatch && searchMatch;
       });
+
+      // Sorting logic
+      if (sortBy.value && sortBy.value !== 'All') {
+        productsArray.sort((a, b) => {
+          if (a.status === sortBy.value && b.status !== sortBy.value) {
+            return -1;
+          } else if (a.status !== sortBy.value && b.status === sortBy.value) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+      }
+
+      return productsArray;
     });
 
-    // Ürünleri API'den çeken asenkron fonksiyon
     const getItems = async () => {
       try {
         const response = await apiClient.get('/products');
         products.value = response.data;
       } catch (error) {
-        console.error('Ürünler yüklenirken hata oluştu:', error);
+        console.error('Error fetching products:', error);
       }
     };
 
-    // Yeni ürün eklemek için formu açar
     const addNewProduct = () => {
       dialog.value = true;
     };
 
-    // Form gönderildiğinde çağrılır, yeni ürünü API'ye kaydeder
     const submitForm = async () => {
       if (!isFormValid.value) return;
-
-      const selectedTags = Object.keys(newProduct.value.tags).filter(
-        (tag) => newProduct.value.tags[tag]
-      );
 
       const productData = {
         name: newProduct.value.name,
         description: newProduct.value.description,
         status: newProduct.value.status,
-        tags: selectedTags,
+        tags: newProduct.value.tags,
       };
 
       try {
         await apiClient.post('/products', productData);
-        dialog.value = false; // Formu kapatır
-        await getItems(); // Ürün listesini yeniler
+        dialog.value = false;
+        await getItems();
+        // Reset form
+        newProduct.value = {
+          name: '',
+          description: '',
+          status: '',
+          tags: [],
+        };
+        isFormValid.value = false;
       } catch (error) {
-        console.error('Ürün eklenirken hata oluştu:', error);
+        console.error('Error adding product:', error);
       }
     };
 
-    // Bir ürünü siler ve listeyi yeniler
     const deleteProduct = async (productId) => {
       if (!productId) return;
 
       try {
         await apiClient.delete(`/products/${productId}`);
-        await getItems(); // Ürün listesini günceller
+        await getItems();
       } catch (error) {
-        console.error('Ürün silinirken hata oluştu:', error);
+        console.error('Error deleting product:', error);
       }
     };
 
     onMounted(() => {
-      getItems(); // Sayfa yüklendiğinde ürünleri çeker
+      getItems();
     });
+
+    // Form validation rules
+    const rules = {
+      required: (value) => !!value || 'This field is required.',
+      minLength: (v) => v.length >= 5 || 'Minimum 5 characters required.',
+    };
 
     return {
       filteredProducts,
       sortBy,
+      sortOptions,
+      statusOptions,
+      availableTags,
       deleteProduct,
       addNewProduct,
       dialog,
       isFormValid,
       newProduct,
       submitForm,
-    };
-  },
-  data() {
-    return {
-      rules: {
-        required: (value) => !!value || 'This field is required.',
-        minLength: (v) => v.length >= 5 || 'Minimum 5 characters required.',
-      },
+      rules,
     };
   },
 };
 </script>
 
 <style scoped>
-/* Artık kullanılmayan sınıflar kaldırıldı */
+/* Add your styles here */
 
-/* İsteğe bağlı olarak stil ayarlarını güncelleyebilirsiniz */
+
 </style>
