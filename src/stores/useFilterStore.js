@@ -6,6 +6,7 @@ export const useFilterStore = defineStore('filterStore', {
     filters: {
       status: [],
       tags: [],
+      searchQuery: '', // Arama sorgusu eklendi
     },
   }),
   actions: {
@@ -15,8 +16,11 @@ export const useFilterStore = defineStore('filterStore', {
     updateTags(tags) {
       this.filters.tags = tags;
     },
+    updateSearchQuery(query) { // Yeni eylem eklendi
+      this.filters.searchQuery = query;
+    },
     resetFilters() {
-      this.filters = { status: [], tags: [] };
+      this.filters = { status: [], tags: [], searchQuery: '' }; // Arama sorgusu sıfırlandı
     },
   },
 });

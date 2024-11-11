@@ -6,6 +6,8 @@
       :key="option"
       :label="option"
       :value="option"
+      density="compact"
+      hide-details
       v-model="selectedStatus"
       @change="updateFilter"
     />
@@ -16,6 +18,8 @@
       :key="option"
       :label="option"
       :value="option"
+      density="compact"
+      hide-details
       v-model="selectedTags"
       @change="updateFilter"
     />

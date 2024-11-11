@@ -1,16 +1,16 @@
 <template>
   <v-app>
-    <!-- Router tarafından hangi sayfa (bileşen) yüklenecekse burada görüntülenir -->
+    <AppTopbar />
+    <AppSidebar /> <!-- Yan menüyü ekledik -->
     <router-view></router-view>
   </v-app>
 </template>
 
-<script>
-export default {
-  name: 'App', // Ana bileşenin adı
-};
+<script setup>
+import AppTopbar from '@/components/AppTopbar.vue';
+import AppSidebar from '@/components/AppSidebar.vue';
 </script>
 
 <style>
-/* İsteğe bağlı stiller buraya eklenebilir */
+/* Global stiller buraya eklenebilir */
 </style>
