@@ -1,0 +1,66 @@
+import { mount, flushPromises } from '@vue/test-utils'
+import FilterMenu from './../../src/components/FilterMenu.vue'
+import { expect, vi, test } from 'vitest'
+import axios from 'axios'
+import HomePage from "@/HomePage.vue";
+import {createVuetify} from "vuetify";
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+const vuetify = createVuetify({
+  components,
+  directives,
+})
+const mockProductList = [
+  {
+    "id": "57f4",
+    "name": "123123",
+    "description": "12312312",
+    "status": "In Progress",
+    "tags": [
+      "frontend"
+    ]
+  },
+  {
+    "id": "24cd",
+    "name": "15215125",
+    "description": "215125",
+    "status": "In Progress",
+    "tags": [
+      "ux",
+      "ui"
+    ]
+  },
+]
+
+// Following lines tell Jest to mock any call to `axios.get`
+// and to return `mockProductList` instead
+vi.spyOn(axios, 'get').mockResolvedValue(mockProductList)
+
+//const template = '<v-layout><home-page></home-page></v-layout>'
+test('loads posts on button click', async () => {
+  const wrapper = mount({
+    HomePage
+  }, {
+    components: {FilterMenu},
+    global: {
+      plugins: [vuetify],
+    }
+  })
+
+  expect(axios.get).toHaveBeenCalledTimes(1)
+  expect(axios.get).toHaveBeenCalledWith('http://localhost:3001/products', {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
+  // Wait until the DOM updates.
+  await flushPromises()
+
+  // Finally, we make sure we've rendered the content from the API.
+  const products = wrapper.findAll('[data-test="product"]')
+  console.log(products[0].text(), 'noldu?')
+  expect(products).toHaveLength(2)
+  expect(products[0].text()).toContain('123123')
+  expect(products[1].text()).toContain('15215125')
+})

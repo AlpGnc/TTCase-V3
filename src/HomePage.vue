@@ -33,7 +33,7 @@
         <!-- Ürün listesi, filtrelenmiş ürünleri gösterir -->
         <v-row v-for="product in filteredProducts" :key="product.id" class="mb-3">
           <v-col>
-            <v-card class="product-card">
+            <v-card class="product-card" data-test="product">
               <v-card-text>
                 <!-- Ürün başlığı ve açıklaması -->
                 <div class="d-flex justify-space-between">
