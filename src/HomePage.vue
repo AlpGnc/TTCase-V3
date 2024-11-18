@@ -47,8 +47,6 @@
                     color="error"
                     @click="deleteProduct(product.id)"
                     class="delete-btn"
-                    height="45px"
-                    
                   >
                     Delete
                   </v-btn>
@@ -165,30 +163,30 @@
 </template>
 
 <script>
-import { computed, ref, onMounted } from 'vue';
-import { useFilterStore } from '@/stores/useFilterStore';
-import apiClient from '@/services/api';
+import { computed, ref, onMounted } from "vue";
+import { useFilterStore } from "@/stores/useFilterStore";
+import apiClient from "@/services/api";
 
 export default {
   setup() {
     const filterStore = useFilterStore();
     const products = ref([]);
-    const sortBy = ref('All'); // Initialize sortBy with 'All'
+    const sortBy = ref("All"); // Initialize sortBy with 'All'
     const dialog = ref(false);
     const isFormValid = ref(false);
 
     // New product data
     const newProduct = ref({
-      name: '',
-      description: '',
-      status: '',
+      name: "",
+      description: "",
+      status: "",
       tags: [],
     });
 
     // Options
-    const statusOptions = ['In Progress', 'Completed', 'Pending'];
-    const sortOptions = ['All', ...statusOptions];
-    const availableTags = ['Frontend', 'UX', 'UI', 'Bug'];
+    const statusOptions = ["In Progress", "Completed", "Pending"];
+    const sortOptions = ["All", ...statusOptions];
+    const availableTags = ["Frontend", "UX", "UI", "Bug"];
 
     const filteredProducts = computed(() => {
       const searchQuery = filterStore.filters.searchQuery.toLowerCase();
@@ -211,7 +209,7 @@ export default {
       });
 
       // Sorting logic
-      if (sortBy.value && sortBy.value !== 'All') {
+      if (sortBy.value && sortBy.value !== "All") {
         productsArray.sort((a, b) => {
           if (a.status === sortBy.value && b.status !== sortBy.value) {
             return -1;
@@ -228,10 +226,10 @@ export default {
 
     const getItems = async () => {
       try {
-        const response = await apiClient.get('/products');
+        const response = await apiClient.get("/products");
         products.value = response.data;
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
       }
     };
 
@@ -250,19 +248,19 @@ export default {
       };
 
       try {
-        await apiClient.post('/products', productData);
+        await apiClient.post("/products", productData);
         dialog.value = false;
         await getItems();
         // Reset form
         newProduct.value = {
-          name: '',
-          description: '',
-          status: '',
+          name: "",
+          description: "",
+          status: "",
           tags: [],
         };
         isFormValid.value = false;
       } catch (error) {
-        console.error('Error adding product:', error);
+        console.error("Error adding product:", error);
       }
     };
 
@@ -273,7 +271,7 @@ export default {
         await apiClient.delete(`/products/${productId}`);
         await getItems();
       } catch (error) {
-        console.error('Error deleting product:', error);
+        console.error("Error deleting product:", error);
       }
     };
 
@@ -283,8 +281,8 @@ export default {
 
     // Form validation rules
     const rules = {
-      required: (value) => !!value || 'This field is required.',
-      minLength: (v) => v.length >= 5 || 'Minimum 5 characters required.',
+      required: (value) => !!value || "This field is required.",
+      minLength: (v) => v.length >= 5 || "Minimum 5 characters required.",
     };
 
     return {
@@ -306,7 +304,36 @@ export default {
 </script>
 
 <style scoped>
-/* Add your styles here */
+
+.d-flex {
+  display: flex;
+   /* Kart içeriğini yatayda dağıt */
+  align-items: center; /* İçerikleri dikeyde ortala */
+}
+
+
+.delete-btn {
+  height: 50px; /* Sabit buton yüksekliği */
+  min-width: 100px; /* Sabit genişlik */
+  display: flex;
+  align-items: center; /* Buton içeriğini dikeyde ortala */
+  justify-content: center; /* Buton içeriğini yatayda ortala */
+  font-weight: bold;
+  margin-left: 16px; /* Diğer öğelerle aralığı artır */
+  flex-shrink: 0; /* Butonun kapsayıcıya göre küçülmesini engelle */
+  position: relative; /* Kart içerisindeki diğer öğelerle bağımsız hale getir */
+}
+
+
+.delete-btn:hover {
+  background-color: #ff6b6b; /* Hover durumunda daha açık kırmızı */
+  transform: scale(1.05); /* Hover durumunda butonu biraz büyütme efekti */
+}
+
+.delete-btn:active {
+  transform: scale(0.55); /* Tıklama efekti */
+}
+
 
 
 </style>

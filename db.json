@@ -1,77 +1,12 @@
 {
   "products": [
     {
-      "id": "57f4",
-      "name": "123123",
-      "description": "12312312",
-      "status": "In Progress",
-      "tags": [
-        "frontend"
-      ]
-    },
-    {
-      "id": "24cd",
-      "name": "15215125",
-      "description": "215125",
-      "status": "In Progress",
-      "tags": [
-        "ux",
-        "ui"
-      ]
-    },
-    {
-      "id": "12a4",
-      "name": "632632",
-      "description": "236326",
-      "status": "In Progress",
-      "tags": [
-        "ux"
-      ]
-    },
-    {
-      "id": "fb46",
-      "name": "125125",
-      "description": "21515125",
-      "status": "Completed",
-      "tags": [
-        "ui"
-      ]
-    },
-    {
       "id": "bc7c",
       "name": "23523523",
       "description": "5325235",
       "status": "Completed",
       "tags": [
         "bug"
-      ]
-    },
-    {
-      "id": "2de9",
-      "name": "3262623623623",
-      "description": "235325325",
-      "status": "Completed",
-      "tags": [
-        "ux",
-        "bug"
-      ]
-    },
-    {
-      "id": "7c02",
-      "name": "235235",
-      "description": "23523",
-      "status": "Pending",
-      "tags": [
-        "frontend"
-      ]
-    },
-    {
-      "id": "7d78",
-      "name": "2352352",
-      "description": "3523235",
-      "status": "Pending",
-      "tags": [
-        "ux"
       ]
     },
     {
@@ -193,6 +128,16 @@
       "status": "In Progress",
       "tags": [
         "UX",
+        "UI"
+      ]
+    },
+    {
+      "id": "cc1d",
+      "name": "35235235",
+      "description": "325325",
+      "status": "Completed",
+      "tags": [
+        "Frontend",
         "UI"
       ]
     }
